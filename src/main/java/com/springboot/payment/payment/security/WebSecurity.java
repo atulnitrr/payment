@@ -42,6 +42,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers("/h2-console/**")
                 .permitAll()
+                .antMatchers(HttpMethod.GET, "/test").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(getAuthFilter())
