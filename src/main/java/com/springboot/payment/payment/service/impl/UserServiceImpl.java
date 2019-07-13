@@ -1,8 +1,12 @@
 package com.springboot.payment.payment.service.impl;
 
+import java.util.Collections;
 import java.util.UUID;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.springboot.payment.payment.dto.UserDto;
@@ -18,9 +22,6 @@ public class UserServiceImpl implements UserService  {
     private UserRespository userRespository;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-//    public UserServiceImpl(final UserRespository userRespository) {
-//        this.userRespository = userRespository;
-//    }
 
     @Autowired
     public UserServiceImpl(final UserRespository userRespository, final BCryptPasswordEncoder bCryptPasswordEncoder) {
@@ -38,5 +39,23 @@ public class UserServiceImpl implements UserService  {
         final UserDto userDto = new UserDto();
         BeanUtils.copyProperties(savedUser, userDto);
         return userDto;
+    }
+
+    @Override public UserDto getUser(final String email) {
+        final UserEntity userEntity = userRespository.findByEmail(email);
+        if (userEntity == null) {
+            throw new UsernameNotFoundException(email);
+        }
+        final UserDto userDto = new UserDto();
+        BeanUtils.copyProperties(userEntity, userDto);
+        return userDto;
+    }
+
+    @Override public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
+        final UserEntity userEntity = userRespository.findByEmail(email);
+        if (userEntity == null) {
+            throw new UsernameNotFoundException(email);
+        }
+        return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), Collections.emptyList());
     }
 }

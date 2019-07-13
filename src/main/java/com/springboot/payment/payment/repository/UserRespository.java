@@ -7,4 +7,6 @@ import com.springboot.payment.payment.entity.UserEntity;
 
 @Repository
 public interface UserRespository extends CrudRepository<UserEntity, Long> {
+
+    UserEntity findByEmail(final String email);
 }
