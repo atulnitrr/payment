@@ -1,5 +1,6 @@
 package com.springboot.payment.payment.model.request;
 
+import java.util.List;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -18,6 +19,16 @@ public class UserRequest {
     @NotNull
     @Size(min = 3, max = 15, message = "password should be between 3 and 15 char")
     private String password;
+
+    private List<AddressRequest> address;
+
+    public List<AddressRequest> getAddress() {
+        return address;
+    }
+
+    public void setAddress(final List<AddressRequest> address) {
+        this.address = address;
+    }
 
     public String getName() {
         return name;

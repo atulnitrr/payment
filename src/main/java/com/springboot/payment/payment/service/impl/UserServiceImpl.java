@@ -1,6 +1,8 @@
 package com.springboot.payment.payment.service.impl;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +52,20 @@ public class UserServiceImpl implements UserService  {
         BeanUtils.copyProperties(userEntity, userDto);
         return userDto;
     }
+
+    @Override public List<UserDto> getAllUsers() {
+
+        final List<UserDto> users = new ArrayList<>();
+        List<UserEntity> userEntityList = (List<UserEntity>) userRespository.findAll();
+
+        for(final UserEntity userEntity: userEntityList) {
+            final UserDto userDto = new UserDto();
+            BeanUtils.copyProperties(userEntity, userDto);
+            users.add(userDto);
+        }
+
+        return users;
+     }
 
     @Override public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
         final UserEntity userEntity = userRespository.findByEmail(email);
